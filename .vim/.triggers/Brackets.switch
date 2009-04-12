@@ -1,0 +1,139 @@
+function! Switched_Brackets()
+  " Code to toggle brackets-mappings if imaps.vim is installed {{{
+  " This permits to toogle the brackets-mappings when imap.vim is present on
+  " the system
+  if exists('*IMAP')
+    TRIGGER "let g:Imap_FreezeImap=1" , "let g:Imap_FreezeImap=0"
+  endif
+  " imaps.vim special }}}
+  "
+  " [ & ] {{{
+  if exists('b:cb_bracket') && b:cb_bracket
+vunmap  <buffer>[
+    if exists('*IMAP')
+      if &ft == 'tex'
+	call IMAP('\[', "\<C-R>=Insert_sqbracket(1)\<cr>", &ft)
+      endif
+      call IMAP('[', "\<C-R>=Insert_sqbracket(0)\<cr>", &ft)
+    else
+iunmap  <buffer>[
+    endif
+nunmap  <buffer>[
+nunmap  <buffer><M-[>
+iunmap  <buffer><M-[>
+  endif
+  " [ & ] }}}
+  "
+  " < & > {{{
+  if exists('b:cb_cmp') && b:cb_cmp
+    if exists('*IMAP')
+      call IMAP('<', "\<c-r>=Brkt_lt()\<cr>", &ft)
+      " if !exists('b:cb_ltFn') || 0==b:cb_ltFn
+	" call IMAP('\<', "\<c-r>=Insert_lt_gt(1)\<cr>", &ft)
+      " endif
+      call IMAP('>', "\<c-r>=Brkt_gt()\<cr>", &ft)
+    else
+iunmap  <buffer><
+iunmap  <buffer>>
+    endif
+vunmap  <buffer><
+        "nmap <buffer> < viw<
+nunmap  <buffer><M-<>
+iunmap  <buffer><M-<>
+  endif
+  " < & > }}}
+  "
+  " { & } {{{
+  if exists('b:cb_acco') && b:cb_acco
+    if exists('*IMAP')
+      if &ft == 'tex'
+	call IMAP('{', "\<C-R>=Insert_clbracket(0,0)\<cr>", &ft)
+	" Required or not ?
+	" call IMAP('\{', "\<C-R>=Insert_clbracket(1,0)\<cr>", &ft)
+      else
+	call IMAP('{', "\<C-R>=Insert_clbracket(0,1)\<cr>", &ft)
+	call IMAP('#{', "\<C-R>=Insert_clbracket(0,0)\<cr>", &ft)
+      endif
+    else
+      if &syntax == "tex"
+iunmap  <buffer>{
+      else
+	" inoremap <buffer> { <C-R>=<sid>EscapableBracketsLn('{','{','}')<cr>
+iunmap  <buffer>{
+iunmap  <buffer>#{
+      endif
+    endif
+vunmap  <buffer>{
+nunmap  <buffer>{
+    if !exists('b:cb_jump_on_close') || b:cb_jump_on_close
+nunmap  <buffer>}
+      ""inoremap <buffer> } <c-r>=MapNoContext('}',BuildMapSeq('!find}!'))<cr>
+      " Next line does not work well (vim 6.1.362)
+iunmap  <buffer>}
+    endif
+  endif
+  " { & } }}}
+  "
+  " ( & ) {{{
+  if exists('b:cb_parent') && b:cb_parent
+    if exists('*IMAP')
+      if &ft == 'vim'
+	" context à bloquer comments only
+	call IMAP('\(', "\<C-R>=Insert_rdbracket(1)\<cr>", &ft)
+	call IMAP('\%(', "\<C-R>=Insert_rdbracket(2)\<cr>", &ft)
+      elseif &ft == 'tex'
+	call IMAP('\(', "\<C-R>=Insert_rdbracket(1)\<cr>", &ft)
+      endif
+      call IMAP('(', "\<C-R>=Insert_rdbracket(0)\<cr>", &ft)
+    else
+iunmap  <buffer>(
+    endif
+    if !exists('b:cb_jump_on_close') || b:cb_jump_on_close
+nunmap  <buffer>)
+iunmap  <buffer>)
+	 " inoremap <buffer> ) <C-R>=MapNoContext(')', '\<esc\>:call search(")")\<cr\>a')<CR>
+    endif
+vunmap  <buffer>(
+nunmap  <buffer>(
+nunmap  <buffer><M-(>
+iunmap  <buffer><M-(>
+  endif
+  " ( & ) }}}
+
+  " $ & $ {{{
+  if exists('b:cb_mathMode') && b:cb_mathMode
+    if exists('*IMAP')
+      call IMAP( '$', "\<c-r>=Insert_LaTeX_TwoDollars()\<cr>", &ft)
+      call IMAP( '\$', '\$', &ft)
+    else
+iunmap  <buffer>$
+    endif
+vunmap  <buffer>$$
+nunmap  <buffer>$$
+nunmap  <buffer><M-$>
+iunmap  <buffer><M-$>
+  endif
+  " $ & $ }}}
+  "
+  " quotes {{{
+  if exists('b:cb_quotes') && b:cb_quotes
+iunmap  <buffer>'
+vunmap  <buffer>''
+nunmap  <buffer>''
+nunmap  <buffer><M-'>
+	" add quotes around the word under the cursor
+iunmap  <buffer><M-'>
+  endif
+  " quotes }}}
+  "
+  " double-quotes {{{
+  if exists('b:cb_Dquotes') && b:cb_Dquotes
+iunmap  <buffer>"
+vunmap  <buffer>""
+nunmap  <buffer>""
+nunmap  <buffer><M-">
+	" add dquotes around the word under the cursor
+iunmap  <buffer><M-">
+  endif
+  " double-quotes }}}
+endfunction " }}}

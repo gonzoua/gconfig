@@ -1,0 +1,4 @@
+- Fix redefinition of Pylint command for multiple buffers
+- Do not jump to the first error if check is initiated by buffer write
+- Write buffer when calling Pylint command directly
+
